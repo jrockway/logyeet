@@ -1,0 +1,18 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@com_github_atlassian_bazel_tools//golangcilint:def.bzl", "golangcilint")
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+
+# gazelle:prefix github.com/jrockway/logyeet
+gazelle(name = "gazelle")
+
+golangcilint(
+    name = "golint",
+    config = "//:.golangci.yaml",
+    paths = [
+        "cmd/...",
+        "lib/...",
+    ],
+    prefix = "github.com/jrockway/logyeet",
+)
+
+buildifier(name = "buildifier")

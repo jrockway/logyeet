@@ -1,0 +1,35 @@
+syntax = "proto3";
+package logyeet;
+option go_package = "github.com/jrockway/logyeet/pkg/logyeetpb";
+
+// Logyeet is the gRPC service that the logyeet client sends logs to.
+service Logyeet {
+    // StreamLogs accepts the bytes from one underlying log file.
+    //
+    // Metadata like the name of the service sending the logs is conveyed in gRPC metadata.
+    rpc StreamLogs(stream StreamLogsRequest) returns (StreamLogsReply);
+}
+
+// StreamLogsRequests represents either log data or statistics.  Log messages contain actual bytes
+// from the log file.  Stats add some statistics for monitoring the health of the log transfer.
+message StreamLogsRequest {
+    // Send log data.
+    Log log = 1;
+
+    // Send statistics.
+    Stats stats = 2;
+}
+
+// StreamLogsReply is returned when all log data has been accepted.  You may open a new stream to
+// send more data.
+message StreamLogsReply {}
+
+// Log represents bytes from the log.
+message Log {
+    bytes log = 1;
+}
+
+// Stats represents some statistics about the log file.
+message Stats {
+    int64 current_file_size = 1;
+}
